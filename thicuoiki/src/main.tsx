@@ -19,6 +19,8 @@ import ProductAdminPage from "./pages/ProductAdminPage.tsx";
 import ProductUserPage from "./pages/ProductUserPage.tsx";
 import Home from "./pages/Home.tsx";
 import BuddhistFuneral from "./pages/BuddhistFuneral.tsx";
+import CatholicFuneral from "./pages/CatholicFuneral.tsx";
+
 
 
 
@@ -83,8 +85,9 @@ const userRoutes = [
   
   {
     path: `${basePagePath}/catholic-funeral`,
-    element: <h1> Đặt Tang Lễ Công Giáo ở đây</h1>,
+    element: <CatholicFuneral />,
   },
+  
   {
     path: `${basePagePath}/coffin-production`,
     element: <h1> Đặt Quy Trình Sản Xuất Quan Tài ở đây</h1>,
