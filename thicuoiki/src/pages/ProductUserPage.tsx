@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Card, Row, Col, Image, Typography, Button, Input, Select, Space, InputNumber, message } from "antd";
+import { Card, Row, Col, Image, Typography, Button, Input, Select, Space, InputNumber, message, Modal } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import { fetchProduct,Product} from "../api/product.api";
+import { fetchProduct, Product } from "../api/product.api";
 import { fetchCategories, Category } from "../api/category.api";
 import { addToCart } from "../api/cart.api";
 
@@ -10,20 +10,17 @@ const { Option } = Select;
 
 const ProductUserPage = () => {
     const [selectedQuantities, setSelectedQuantities] = useState<{ [key: number]: number }>({});
-    const [products, setProducts] = useState<Product[]>([]);  
-    const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); 
-    const [categories, setCategories] = useState<Category[]>([]); 
-    const [searchTerm, setSearchTerm] = useState(""); 
-    const [selectedCategory, setSelectedCategory] = useState<number | null>(null); 
+    const [products, setProducts] = useState<Product[]>([]);
+    const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     useEffect(() => {
-        fetchProduct().then((data) => {
-            setProducts(data);
-        });
-
-        fetchCategories().then((data) => {
-            setCategories(data);
-        });
+        fetchProduct().then((data) => setProducts(data));
+        fetchCategories().then((data) => setCategories(data));
     }, []);
 
     useEffect(() => {
@@ -62,22 +59,24 @@ const ProductUserPage = () => {
         }
     };
 
-    return (
-        <div style={{ padding: "20px", background: "#fff" }}>
-            {/* Thanh tìm kiếm */}
-            <Input
-                placeholder="Tìm kiếm sản phẩm..."
-                prefix={<SearchOutlined />}
-                style={{ width: 400, marginBottom: "20px" }}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-            />
+    const handleViewDetails = (product: Product) => {
+        setSelectedProduct(product);
+        setIsModalVisible(true);
+    };
 
-            {/* Bộ lọc danh mục */}
-            <div style={{ marginBottom: "20px" }}>
-                <Text strong>Chọn danh mục:</Text>
+    return (
+        <div style={{ padding: "20px", background: "#f8f8f8", minHeight: "100vh" }}>
+            {/* Thanh tìm kiếm và bộ lọc */}
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
+                <Input
+                    placeholder="Tìm kiếm sản phẩm..."
+                    prefix={<SearchOutlined />}
+                    style={{ width: 400 }}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
                 <Select
-                    style={{ width: 200, marginLeft: 10 }}
+                    style={{ width: 200 }}
                     placeholder="Tất cả danh mục"
                     allowClear
                     onChange={(value) => setSelectedCategory(value || null)}
@@ -90,14 +89,32 @@ const ProductUserPage = () => {
                 </Select>
             </div>
 
-            {/* Danh sách sản phẩm */}
+            {/* Danh sách sản phẩm dạng thẻ */}
             <Row gutter={[16, 16]}>
                 {filteredProducts.map((product) => (
                     <Col xs={24} sm={12} md={8} lg={6} xl={4} key={product.id}>
-                        <Card hoverable>
-                            <Image src={product.image} alt={product.name} width="100%" height={200} />
-                            <Title level={5} style={{ marginTop: 10 }}>{product.name}</Title>
-                            <Text strong style={{ color: "red" }}>{product.price.toLocaleString()}đ</Text>
+                        <Card
+                            hoverable
+                            style={{
+                                borderRadius: 10,
+                                overflow: "hidden",
+                                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                                textAlign: "center",
+                            }}
+                            cover={
+                                <Image
+                                    src={product.image}
+                                    alt={product.name}
+                                    width="100%"
+                                    height={180}
+                                    style={{ objectFit: "cover", borderRadius: "10px 10px 0 0" }}
+                                />
+                            }
+                        >
+                            <Title level={5} style={{ marginBottom: 8 }}>{product.name}</Title>
+                            <Text strong style={{ color: "red", display: "block" }}>
+                                {product.price.toLocaleString()}đ
+                            </Text>
                             <div style={{ marginTop: 10 }}>
                                 <Space>
                                     <InputNumber
@@ -105,18 +122,39 @@ const ProductUserPage = () => {
                                         defaultValue={1}
                                         value={selectedQuantities[product.id] || 1}
                                         onChange={(value) => handleQuantityChange(product.id, value)}
-                                        style={{ width: 80, marginRight: 10 }}
+                                        style={{ width: 60 }}
                                     />
                                     <Button onClick={() => handleAddToCart(product.id)} type="primary">
-                                        Thêm vào giỏ
+                                        🛒
                                     </Button>
-                                    <Button type="primary">Xem chi tiết</Button>
+                                    <Button type="default" onClick={() => handleViewDetails(product)}>
+                                        🔍
+                                    </Button>
                                 </Space>
                             </div>
                         </Card>
                     </Col>
                 ))}
             </Row>
+
+            {/* Modal Hiển Thị Chi Tiết Sản Phẩm */}
+            <Modal
+                title="Chi Tiết Sản Phẩm"
+                open={isModalVisible}
+                onCancel={() => setIsModalVisible(false)}
+                footer={null}
+            >
+                {selectedProduct && (
+                    <div style={{ textAlign: "center" }}>
+                        <Image src={selectedProduct.image} alt={selectedProduct.name} width={200} />
+                        <Title level={4}>{selectedProduct.name}</Title>
+                        <Text strong style={{ color: "red", fontSize: 18 }}>
+                            {selectedProduct.price.toLocaleString()}đ
+                        </Text>
+                        <p>{selectedProduct.description}</p>
+                    </div>
+                )}
+            </Modal>
         </div>
     );
 };
