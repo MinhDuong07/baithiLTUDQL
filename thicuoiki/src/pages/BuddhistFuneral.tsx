@@ -101,52 +101,52 @@ const BuddhistFuneral: React.FC = () => {
 
       <div style={{ marginTop: "20px", textAlign: "left" }}>
         <Paragraph style={{ fontSize: "20px", lineHeight: "1.8", textAlign: "justify" }}>
-          <strong>1 - Trị quan nhập liệm:</strong>  Một người mất (chết), trút hơi thở cuối cùng. Sau đó ít nhất là 4 giờ, tốt hơn hết là sau 24 giờ, được tắm rửa sạch sẽ, đưa vào một cái hòm gỗ (quan tài)
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>1 - Trị quan nhập liệm:</div> Một người mất (chết), trút hơi thở cuối cùng. Sau đó ít nhất là 4 giờ, tốt hơn hết là sau 24 giờ, được tắm rửa sạch sẽ, đưa vào một cái hòm gỗ (quan tài)
         </Paragraph>
         <Paragraph>
-          <strong>2 - Phục hồn:</strong> Thiết lập một bàn thờ Linh có linh ảnh, bài vị, bát nhang. Thỉnh vong linh an vị, để cho thần thức định tỉnh nhận rõ sự việc đang phải lìa thể xác.
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>2 - Phục hồn:</div> Thiết lập một bàn thờ Linh có linh ảnh, bài vị, bát nhang. Thỉnh vong linh an vị, để cho thần thức định tỉnh nhận rõ sự việc đang phải lìa thể xác.
         </Paragraph>
         <Paragraph>
-          <strong>3 - Khai kinh - Tiến linh:</strong> Thiết lập bàn Phật, thỉnh Phật chứng minh và siêu độ sự ra đi của vong giả.
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>3 - Khai kinh - Tiến linh:</div> Thiết lập bàn Phật, thỉnh Phật chứng minh và siêu độ sự ra đi của vong giả.
         </Paragraph>
         <Paragraph>
-          <strong>4 - Phát tang:</strong> Ðể cho bà con thân bằng quyến thuộc có cơ hội từ giả biệt luận với vong giả. Một hình thức ghi nhớ ơn đức, hiếu hạnh trong gia tộc.
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>4 - Phát tang:</div> Ðể cho bà con thân bằng quyến thuộc có cơ hội từ giả biệt luận với vong giả. Một hình thức ghi nhớ ơn đức, hiếu hạnh trong gia tộc.
         </Paragraph>
         <Paragraph>
-          <strong>5 - Triêu điện:</strong> Trong thời gian chưa chôn, các lễ cúng cho hương linh gọi là “điện”. Vậy triêu điện là một lễ cúng buổi sáng gần ngày đưa đám, thường dành riêng cho bà con muốn làm một lễ cúng riêng, đọc ai điếu, lời từ biệt.
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>5 - Triêu điện:</div> Trong thời gian chưa chôn, các lễ cúng cho hương linh gọi là “điện”. Vậy triêu điện là một lễ cúng buổi sáng gần ngày đưa đám, thường dành riêng cho bà con muốn làm một lễ cúng riêng, đọc ai điếu, lời từ biệt.
         </Paragraph>
         <Paragraph>
-          <strong>6 - Tịch điện:</strong> Lễ cúng buổi tối gần ngày đưa đám, thường giành cho con cháu nội tộc, để con cháu có cơ hội nói lên ơn nghĩa, những hình ảnh thân thương, tưởng niệm đến công hạnh của người quá cố.
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>6 - Tịch điện:</div> Lễ cúng buổi tối gần ngày đưa đám, thường giành cho con cháu nội tộc, để con cháu có cơ hội nói lên ơn nghĩa, những hình ảnh thân thương, tưởng niệm đến công hạnh của người quá cố.
         </Paragraph>
         <Paragraph>
-          <strong>7 - Triệu tổ:</strong> Lễ này thường được cử hành trước ngày di quan khoảng 2 hôm trở lại. Tang quyến thỉnh linh vị, di ảnh, bát nhang đầy đủ lễ vật đến tự đường (nhà thờ họ). Ðặt linh vị trên một cái bàn nhỏ đối diện án thờ gia tiên.
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>7 - Triệu tổ:</div> Lễ này thường được cử hành trước ngày di quan khoảng 2 hôm trở lại. Tang quyến thỉnh linh vị, di ảnh, bát nhang đầy đủ lễ vật đến tự đường (nhà thờ họ). Ðặt linh vị trên một cái bàn nhỏ đối diện án thờ gia tiên.
         </Paragraph>
         <Paragraph>
-          <strong>8 - Sái tịnh, nhiễu quan và quy y linh:</strong> Trong lúc đại chúng đang tụng chú Ðại Bi, vị chủ sám dùng bình Cam Lồ vào tẩy tịnh quan tài, chú Ðại Bi vừa dứt, sám chủ thán: “Giác tánh viên minh, tùng lai trạm tịch; bổn lai nhơn ngã chi huyễn tướng, hà hữu sanh tử chi giả danh? Nhơn tối sơ nhất niệm sái thù, tùng mộng tưởng hữu tư sanh diệt
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>8 - Sái tịnh, nhiễu quan và quy y linh:</div> Trong lúc đại chúng đang tụng chú Ðại Bi, vị chủ sám dùng bình Cam Lồ vào tẩy tịnh quan tài, chú Ðại Bi vừa dứt, sám chủ thán: “Giác tánh viên minh, tùng lai trạm tịch; bổn lai nhơn ngã chi huyễn tướng, hà hữu sanh tử chi giả danh? Nhơn tối sơ nhất niệm sái thù, tùng mộng tưởng hữu tư sanh diệt
         </Paragraph>
         <Paragraph>
-          <strong>9 - Cáo đạo lộ:</strong> Lễ này thường nhờ một người hộ tang đứng cúng, được cử hành trước một hôm đưa đám, đặt bàn cúng  trước cữa ngõ, ý nghĩa xin hộ đàng cho đám táng được yên ổn thuận lợi.
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>9 - Cáo đạo lộ:</div> Lễ này thường nhờ một người hộ tang đứng cúng, được cử hành trước một hôm đưa đám, đặt bàn cúng  trước cữa ngõ, ý nghĩa xin hộ đàng cho đám táng được yên ổn thuận lợi.
         </Paragraph>
         <Paragraph>
-          <strong>10 - Khiển điện:</strong> Lễ này cúng trước khi di quan, thường dành cho bằng hữu tỏ bày tâm sự, tình cảm với hương linh qua điếu văn.
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>10 - Khiển điện:</div> Lễ này cúng trước khi di quan, thường dành cho bằng hữu tỏ bày tâm sự, tình cảm với hương linh qua điếu văn.
         </Paragraph>
         <Paragraph>
-          <strong>11 - Di quan (động quan):</strong> Lễ di chuyển quan tài đi chôn hay hỏa táng, một lễ có nhiều xúc động nhất. Trong lễ này Gia trì sư thường đội nón Tỳ Lư và cầm tích trượng để hướng dẩn hương linh.
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>11 - Di quan (động quan):</div> Lễ di chuyển quan tài đi chôn hay hỏa táng, một lễ có nhiều xúc động nhất. Trong lễ này Gia trì sư thường đội nón Tỳ Lư và cầm tích trượng để hướng dẩn hương linh.
         </Paragraph>
         <Paragraph>
-          <strong>12 - Tế độ trung:</strong> Cúng giữa đường, lễ này với ý nghĩa: Trước tiên vì đường sá xa xôi, nghỉ xả hơi cho âm công (người gánh đám) lấy sức, đãi đằng ăn uống.
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>12 - Tế độ trung:</div> Cúng giữa đường, lễ này với ý nghĩa: Trước tiên vì đường sá xa xôi, nghỉ xả hơi cho âm công (người gánh đám) lấy sức, đãi đằng ăn uống.
         </Paragraph>
         <Paragraph>
-          <strong>13 - Trị huyệt:</strong> Một lễ làm tinh sạch huyệt, trước khi hạ quan tài.
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>13 - Trị huyệt:</div> Một lễ làm tinh sạch huyệt, trước khi hạ quan tài.
         </Paragraph>
         <Paragraph>
-          <strong>14 - Tạ thổ thần:</strong> Lễ khấn vái thổ thần và những hương linh của những ngôi mộ chung quanh. Nay có huơng linh. . . cùng chung cư trú tại địa phận này.
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>14 - Tạ thổ thần:</div> Lễ khấn vái thổ thần và những hương linh của những ngôi mộ chung quanh. Nay có huơng linh. . . cùng chung cư trú tại địa phận này.
         </Paragraph>
         <Paragraph>
-          <strong>15 - Nhiễu mộ:</strong> Lễ này cử hành sau khi an táng xong; bái biệt hương linh, tạ chư Tăng, và quan khách đi dự đám táng.
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>15 - Nhiễu mộ:</div> Lễ này cử hành sau khi an táng xong; bái biệt hương linh, tạ chư Tăng, và quan khách đi dự đám táng.
         </Paragraph>
         <Paragraph>
-          <strong>16 - An linh:</strong> Khi về đến nhà, chùa, an vị hương linh để hương khói thờ phụng. Ngày trước đưa về nhà, phải thiết bàn thờ riêng trong hai năm hoặc ít nhất là 100 ngày, sau mới được nhập vào bàn thờ chung với tổ tiên. Ngoài ra còn có lễ đề phan vị, đề thần chú, lễ khai môn (mở cửa mã): sau khi chôn ba ngày làm lễ khai môn để hương linh được phép ra vào.
+        <div style={{ fontSize: "22px", fontWeight: "bold", marginTop: "20px" }}>16 - An linh:</div> Khi về đến nhà, chùa, an vị hương linh để hương khói thờ phụng. Ngày trước đưa về nhà, phải thiết bàn thờ riêng trong hai năm hoặc ít nhất là 100 ngày, sau mới được nhập vào bàn thờ chung với tổ tiên. Ngoài ra còn có lễ đề phan vị, đề thần chú, lễ khai môn (mở cửa mã): sau khi chôn ba ngày làm lễ khai môn để hương linh được phép ra vào.
           Và để chuẩn bị được các nghi thức bàn bản theo đúng lễ tang Phật Giáo, gia quyến cần được nhờ đến sự hỗ trợ của các đơn vị chuyên tổ chức tang lễ. Bởi ở các cơ sở mai táng sẽ mang đến cho gia đình một tang lễ nghiêm trang và đúng các nghi thức tôn giáo của từng gia đình.
         </Paragraph>
       </div>
