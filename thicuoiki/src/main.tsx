@@ -17,6 +17,7 @@ import StatisticsPage from "./pages/StatisticsPage.tsx";
 import { readRoles } from "./utils/localstorage.ts";
 import ProductAdminPage from "./pages/ProductAdminPage.tsx";
 import ProductUserPage from "./pages/ProductUserPage.tsx";
+import Home from "./pages/Home.tsx";
 
 const role = readRoles() || "ROLE_USER";
 const basePagePath = role === "ROLE_ADMIN" ? "/page/admin" : "/page";
@@ -61,7 +62,7 @@ const adminRoutes = [
 const userRoutes = [
   {
     path: `${basePagePath}/home`,
-    element: <h1> Đặt trang  chủ ở đây</h1>,
+    element: <Home />,
   },
   {
     path: `${basePagePath}/about`,
