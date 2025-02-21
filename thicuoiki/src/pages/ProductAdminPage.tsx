@@ -15,12 +15,9 @@ const ProductAdminPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
-
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-
   const [selectedQuantities, setSelectedQuantities] = useState<{ [key: number]: number }>({});
-
 
   const [currentProduct, setCurrentProduct] = useState<Partial<Product>>({
     name: "",
@@ -34,6 +31,10 @@ const ProductAdminPage: React.FC = () => {
     status: "available",
   });
 
+  // State cho modal mô tả
+  const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false);
+  const [selectedProductForDescription, setSelectedProductForDescription] = useState<Product | null>(null);
+
   useEffect(() => {
     loadProducts();
     loadCategories();
@@ -44,7 +45,6 @@ const ProductAdminPage: React.FC = () => {
     try {
       const data = await fetchProduct();
       let filteredProducts = Array.isArray(data) ? data : [];
-
       if (searchTerm) {
         filteredProducts = filteredProducts.filter(
           (product) =>
@@ -52,7 +52,6 @@ const ProductAdminPage: React.FC = () => {
             product.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
       }
-
       setProducts(filteredProducts);
     } catch (error) {
       console.error("Lỗi khi lấy sản phẩm:", error);
@@ -92,7 +91,6 @@ const ProductAdminPage: React.FC = () => {
       category: { id: categories[0]?.id || 1, name: "" },
       status: "available",
     });
-
     setIsModalOpen(false);
     loadProducts();
   };
@@ -130,7 +128,7 @@ const ProductAdminPage: React.FC = () => {
   };
 
   const handleAddToCart = async (productId: number) => {
-    const quantity = selectedQuantities[productId] || 1; // Nếu chưa chọn, mặc định là 1
+    const quantity = selectedQuantities[productId] || 1;
     try {
       const response = await addToCart({ productId, quantity });
       if (response) {
@@ -142,21 +140,17 @@ const ProductAdminPage: React.FC = () => {
       message.error("Có lỗi xảy ra khi thêm vào giỏ hàng.");
     }
   };
+
   const handleQuantityChange = (productId: number, quantity: number | null) => {
     if (quantity !== null) {
       setSelectedQuantities((prev) => ({ ...prev, [productId]: quantity }));
     }
   };
+
   const role = readRoles() || "USER";
+
   const columns = [
     { title: "Mã sản phẩm", dataIndex: "id", key: "id", width: 100 },
-    { title: "Tên sản phẩm", dataIndex: "name", key: "name" },
-    { title: "Giá", dataIndex: "price", key: "price" },
-    { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
-    { title: "Loại gỗ", dataIndex: "woodType", key: "woodType" },
-    { title: "Kích thước", dataIndex: "size", key: "size" },
-    { title: "Danh mục", dataIndex: ["category", "name"], key: "category" },
-    { title: "Trạng thái", dataIndex: "status", key: "status" },
     {
       title: "Hình ảnh",
       dataIndex: "image",
@@ -164,6 +158,27 @@ const ProductAdminPage: React.FC = () => {
       render: (image) =>
         image ? <img src={image} alt="Sản phẩm" style={{ width: 50, height: 50, objectFit: "cover" }} /> : "Không có ảnh",
     },
+    { title: "Tên sản phẩm", dataIndex: "name", key: "name" },
+    { title: "Giá", dataIndex: "price", key: "price" },
+    {
+      title: "Mô tả",
+      dataIndex: "description",
+      key: "description",
+      render: (text: string, record: Product) => (
+        <Button
+          type="link"
+          onClick={() => {
+            setSelectedProductForDescription(record);
+            setIsDescriptionModalOpen(true);
+          }}
+        >
+          Xem mô tả
+        </Button>
+      ),
+    },
+    { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
+    { title: "Danh mục", dataIndex: ["category", "name"], key: "category" },
+    { title: "Trạng thái", dataIndex: "status", key: "status" },
     {
       title: "Hành động",
       key: "actions",
@@ -173,17 +188,17 @@ const ProductAdminPage: React.FC = () => {
           <Button danger onClick={() => confirmDelete(record)}>Xóa</Button>
           <Button onClick={() => handleDetail(record)}>Chi tiết</Button>
           <Space>
-          <InputNumber
-            min={1}
-            defaultValue={1}
-            value={selectedQuantities[record.id] || 1}
-            onChange={(value) => handleQuantityChange(record.id, value)}
-            style={{ width: 80, marginRight: 10 }}
-          />
-          <Button onClick={() => handleAddToCart(record.id)} type="primary">
-            Thêm vào giỏ
-          </Button>
-        </Space>
+            <InputNumber
+              min={1}
+              defaultValue={1}
+              value={selectedQuantities[record.id] || 1}
+              onChange={(value) => handleQuantityChange(record.id, value)}
+              style={{ width: 80, marginRight: 10 }}
+            />
+            <Button onClick={() => handleAddToCart(record.id)} type="primary">
+              Thêm vào giỏ
+            </Button>
+          </Space>
         </Space>
       ),
     },
@@ -199,11 +214,14 @@ const ProductAdminPage: React.FC = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{ width: 300 }}
         />
-        <Button type="primary" onClick={loadProducts}>Tìm kiếm</Button>
-        {/* <Button onClick={() => { setSearchTerm(""); loadProducts(); }}>Xóa tìm kiếm</Button> */}
+        <Button type="primary" onClick={loadProducts}>
+          Tìm kiếm
+        </Button>
       </Space>
 
-      <Button type="primary" onClick={() => setIsModalOpen(true)}>Thêm sản phẩm</Button>
+      <Button type="primary" onClick={() => setIsModalOpen(true)}>
+        Thêm sản phẩm
+      </Button>
       <Table dataSource={products} loading={loading} rowKey="id" columns={columns} />
 
       {/* Modal thêm/sửa sản phẩm */}
@@ -214,13 +232,13 @@ const ProductAdminPage: React.FC = () => {
         onCancel={() => setIsModalOpen(false)}
       >
         <Form layout="vertical">
+          {/* Các trường nhập liệu cho sản phẩm */}
           <Form.Item label="Tên sản phẩm">
             <Input
               value={currentProduct.name}
               onChange={(e) => setCurrentProduct({ ...currentProduct, name: e.target.value })}
             />
           </Form.Item>
-
           <Form.Item label="Giá">
             <InputNumber
               min={0}
@@ -229,7 +247,12 @@ const ProductAdminPage: React.FC = () => {
               style={{ width: "100%" }}
             />
           </Form.Item>
-
+          <Form.Item label="Mô tả">
+            <Input
+              value={currentProduct.description}
+              onChange={(e) => setCurrentProduct({ ...currentProduct, description: e.target.value })}
+            />
+          </Form.Item>
           <Form.Item label="Số lượng">
             <InputNumber
               min={0}
@@ -237,25 +260,27 @@ const ProductAdminPage: React.FC = () => {
               onChange={(e) => setCurrentProduct({ ...currentProduct, quantity: e || 0 })}
             />
           </Form.Item>
-
           <Form.Item label="Loại gỗ">
             <Input
               value={currentProduct.woodType}
               onChange={(e) => setCurrentProduct({ ...currentProduct, woodType: e.target.value })}
             />
           </Form.Item>
-
           <Form.Item label="Kích thước">
             <Input
               value={currentProduct.size}
               onChange={(e) => setCurrentProduct({ ...currentProduct, size: e.target.value })}
             />
           </Form.Item>
-
           <Form.Item label="Danh mục">
             <Select
               value={currentProduct.category?.id}
-              onChange={(value) => setCurrentProduct({ ...currentProduct, category: { id: value, name: categories.find(c => c.id === value)?.name || "" } })}
+              onChange={(value) =>
+                setCurrentProduct({
+                  ...currentProduct,
+                  category: { id: value, name: categories.find((c) => c.id === value)?.name || "" },
+                })
+              }
               style={{ width: "100%" }}
             >
               {categories.map((category) => (
@@ -265,7 +290,6 @@ const ProductAdminPage: React.FC = () => {
               ))}
             </Select>
           </Form.Item>
-
           <Form.Item label="Trạng thái">
             <Select
               value={currentProduct.status}
@@ -276,22 +300,17 @@ const ProductAdminPage: React.FC = () => {
               <Option value="out_of_stock">Hết hàng</Option>
             </Select>
           </Form.Item>
-
-          {/* Hiển thị ảnh cũ */}
           {currentProduct.image && (
             <div style={{ marginBottom: "10px", textAlign: "center" }}>
               <img src={currentProduct.image} alt="Ảnh sản phẩm" style={{ width: 100, height: 100, objectFit: "cover" }} />
             </div>
           )}
-
-          {/* Trường nhập URL ảnh mới */}
           <Form.Item label="Link ảnh mới">
             <Input
               value={currentProduct.image}
               onChange={(e) => setCurrentProduct({ ...currentProduct, image: e.target.value })}
             />
           </Form.Item>
-
         </Form>
       </Modal>
 
@@ -303,7 +322,6 @@ const ProductAdminPage: React.FC = () => {
         footer={null}
       >
         <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          {/* Hiển thị ảnh sản phẩm nếu có */}
           {currentProduct.image ? (
             <img
               src={currentProduct.image}
@@ -314,23 +332,71 @@ const ProductAdminPage: React.FC = () => {
             <p>Không có ảnh</p>
           )}
         </div>
-
-        <p><strong>Mã sản phẩm:</strong> {currentProduct.id}</p>
-        <p><strong>Tên sản phẩm:</strong> {currentProduct.name}</p>
-        <p><strong>Giá:</strong> {currentProduct.price} VND</p>
-        <p><strong>Mô tả:</strong> {currentProduct.description}</p>
-        <p><strong>Số lượng:</strong> {currentProduct.quantity}</p>
-        <p><strong>Loại gỗ:</strong> {currentProduct.woodType}</p>
-        <p><strong>Kích thước:</strong> {currentProduct.size}</p>
-        <p><strong>Danh mục:</strong> {currentProduct.category?.name}</p>
-        <p><strong>Trạng thái:</strong> {currentProduct.status === "available" ? " Còn hàng" : "Hết hàng"}</p>
-        <p><strong>Ngày tạo:</strong> {moment(currentProduct.addedAt).format("DD/MM/YYYY HH:mm")}</p>
-        <p><strong>Ngày cập nhật:</strong> {moment(currentProduct.updatedAt).format("DD/MM/YYYY HH:mm")}</p>
+        <p>
+          <strong>Mã sản phẩm:</strong> {currentProduct.id}
+        </p>
+        <p>
+          <strong>Tên sản phẩm:</strong> {currentProduct.name}
+        </p>
+        <p>
+          <strong>Giá:</strong> {currentProduct.price} VND
+        </p>
+        <p>
+          <strong>Mô tả:</strong> {currentProduct.description}
+        </p>
+        <p>
+          <strong>Số lượng:</strong> {currentProduct.quantity}
+        </p>
+        <p>
+          <strong>Loại gỗ:</strong> {currentProduct.woodType}
+        </p>
+        <p>
+          <strong>Kích thước:</strong> {currentProduct.size}
+        </p>
+        <p>
+          <strong>Danh mục:</strong> {currentProduct.category?.name}
+        </p>
+        <p>
+          <strong>Trạng thái:</strong> {currentProduct.status === "available" ? " Còn hàng" : "Hết hàng"}
+        </p>
+        <p>
+          <strong>Ngày tạo:</strong> {moment(currentProduct.addedAt).format("DD/MM/YYYY HH:mm")}
+        </p>
+        <p>
+          <strong>Ngày cập nhật:</strong> {moment(currentProduct.updatedAt).format("DD/MM/YYYY HH:mm")}
+        </p>
       </Modal>
 
+      {/* Modal xác nhận xóa */}
       <Modal title="Xác nhận xóa" open={isConfirmModalOpen} onOk={handleDelete} onCancel={() => setIsConfirmModalOpen(false)}>
         <p>Bạn có chắc chắn muốn xóa sản phẩm này không?</p>
-        <p><strong>{selectedProduct?.name}</strong></p>
+        <p>
+          <strong>{selectedProduct?.name}</strong>
+        </p>
+      </Modal>
+
+      {/* Modal hiển thị mô tả ở dạng table */}
+      <Modal
+        title="Chi tiết mô tả"
+        open={isDescriptionModalOpen}
+        onCancel={() => setIsDescriptionModalOpen(false)}
+        footer={null}
+      >
+        <Table
+          dataSource={
+            selectedProductForDescription
+              ? [
+                  { field: "Mô tả", value: selectedProductForDescription.description },
+                ]
+              : []
+          }
+          pagination={false}
+          rowKey="field"
+          columns={[
+            { title: "", dataIndex: "field", key: "field" },
+            { title: "", dataIndex: "value", key: "value" },
+          ]}
+        />
       </Modal>
     </div>
   );

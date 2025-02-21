@@ -67,7 +67,7 @@ const ProductUserPage = () => {
     return (
         <div style={{ padding: "20px", background: "#f8f8f8", minHeight: "100vh" }}>
             {/* Thanh tìm kiếm và bộ lọc */}
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
+            <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginBottom: "20px" }}>
                 <Input
                     placeholder="Tìm kiếm sản phẩm..."
                     prefix={<SearchOutlined />}
@@ -139,22 +139,24 @@ const ProductUserPage = () => {
 
             {/* Modal Hiển Thị Chi Tiết Sản Phẩm */}
             <Modal
-                title="Chi Tiết Sản Phẩm"
-                open={isModalVisible}
-                onCancel={() => setIsModalVisible(false)}
-                footer={null}
-            >
-                {selectedProduct && (
-                    <div style={{ textAlign: "center" }}>
-                        <Image src={selectedProduct.image} alt={selectedProduct.name} width={200} />
-                        <Title level={4}>{selectedProduct.name}</Title>
-                        <Text strong style={{ color: "red", fontSize: 18 }}>
-                            {selectedProduct.price.toLocaleString()}đ
-                        </Text>
-                        <p>{selectedProduct.description}</p>
-                    </div>
-                )}
-            </Modal>
+    title="Chi Tiết Sản Phẩm"
+    open={isModalVisible}
+    onCancel={() => setIsModalVisible(false)}
+    footer={null}
+>
+    {selectedProduct && (
+        <div style={{ textAlign: "center" }}>
+            <Image src={selectedProduct.image} alt={selectedProduct.name} width={200} />
+            <Title level={4}>{selectedProduct.name}</Title>
+            <Text strong style={{ color: "red", fontSize: 18 }}>
+                {selectedProduct.price.toLocaleString()}đ
+            </Text>
+            <p><strong>Loại gỗ:</strong> {selectedProduct.woodType}</p>
+            <p><strong>Kích thước:</strong> {selectedProduct.size}</p>
+            <p><strong>Mô tả:</strong> {selectedProduct.description}</p>
+        </div>
+    )}
+</Modal>
         </div>
     );
 };
