@@ -123,6 +123,12 @@ const CartPage: React.FC<{ isModalOpenCart: boolean }> = ({ isModalOpenCart }) =
 
   const columns = [
     { title: "Id sản phẩm", dataIndex: ["product", "id"], key: "id" },
+    { 
+      title: "Hình ảnh", 
+      dataIndex: ["product", "image"], 
+      key: "image", 
+      render: (image: string) => <img src={image} alt="Product" style={{ width: 50, height: 50 }} />
+    },
     { title: "Tên sản phẩm", dataIndex: ["product", "name"], key: "name" },
     { title: "Giá", dataIndex: "totalPrice", key: "price" },
     {
@@ -148,17 +154,14 @@ const CartPage: React.FC<{ isModalOpenCart: boolean }> = ({ isModalOpenCart }) =
     },
   ];
 
-  const handleClearCart= async() => {
-      await clearCart(); 
-      loadCart(); 
-    }
-
   return (
-    <div>
-      <Button onClick={handleClearCart} danger style={{ marginBottom: 16 }}>
-        Xóa toàn bộ giỏ hàng
-      </Button>
-      <Table dataSource={cartItems} columns={columns} rowKey="id" />
+    <div style={{ maxWidth: "100%", overflowX: "auto", padding: "16px" }}>
+      <Table 
+        dataSource={cartItems} 
+        columns={columns} 
+        rowKey="id" 
+        scroll={{ x: "max-content" }} 
+      />
       <div style={{ marginTop: 16, fontSize: 18 }}>
         <strong>Tổng tiền: {totalCartPrice.toLocaleString()} VND</strong>
       </div>
