@@ -31,9 +31,6 @@ const AppUser = () => {
         { key: "item01", label: "Trang chủ",  href: "/page/home", roles: ["ROLE_USER"] },
         { key: "item02", label: "Sản phẩm",  href: "/page/product", roles: ["ROLE_USER"] },
         { key: "item03", label: "Giới Thiệu",  href: "/page/about", roles: ["ROLE_USER"] },
-        { key: "item04", label: "Quan Tài Hỏa Táng", href: "/page/cremation-coffin", roles: ["ROLE_USER"] },
-        { key: "item05", label: "Quan Tài Đại Táng", href: "/page/burial-coffin", roles: ["ROLE_USER"] },
-        { key: "item06", label: "Hu Đề Cốt", href: "/page/urn", roles: ["ROLE_USER"] },
         { key: "item07", label: "Tang Lễ Phật Giáo", href: "/page/buddhist-funeral", roles: ["ROLE_USER"] },
         { key: "item08", label: "Tang Lễ Công Giáo", href: "/page/catholic-funeral", roles: ["ROLE_USER"] },
         { key: "item09", label: "Quy Trình Sản Xuất Quan Tài", href: "/page/coffin-production", roles: ["ROLE_USER"] },
@@ -44,17 +41,20 @@ const AppUser = () => {
       const filteredMenuItems = menuItems.filter(item => (item.roles ?? []).includes(role));
     return (
         <Layout>
-            {/* Header */}
-            <Header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#000", padding: "0 20px" }}>
-                <div style={{ color: "#fff", fontSize: "20px", fontWeight: "bold" }}>LOGO</div>
-                <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-                    <Button type="primary" icon={<ShoppingCartOutlined />} onClick={() => toggleModal(1, true)} />
-                    <Button type="primary" onClick={() => toggleModal(0, true)}>
-                        <UserOutlined />
-                    </Button>
-                    <Text style={{ color: "#fff", fontSize: "16px" }}>0902.99.40.99</Text>
-                </div>
-            </Header>
+            <Header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#fff", padding: "0 20px", height: "80px", borderBottom: "1px solid #ddd" }}>
+    <div style={{ fontSize: "20px", fontWeight: "bold", marginTop: "10px" }}>
+        <img src="https://traihomthienduc.com/upload/giaodien/logo.png" alt="Logo" style={{ height: "70px" }} />
+    </div>
+    <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+        <Button type="primary" icon={<ShoppingCartOutlined />} onClick={() => toggleModal(1, true)} />
+        <Button type="primary" onClick={() => toggleModal(0, true)}>
+            <UserOutlined />
+        </Button>
+        <Text style={{ color: "#000", fontSize: "16px" }}>0902.99.40.99</Text>
+    </div>
+</Header>
+
+
 
             {/* Thanh menu */}
             <Menu mode="horizontal" theme="dark" style={{ display: "flex", justifyContent: "center" }}>

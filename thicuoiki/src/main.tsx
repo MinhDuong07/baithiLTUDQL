@@ -18,6 +18,9 @@ import { readRoles } from "./utils/localstorage.ts";
 import ProductAdminPage from "./pages/ProductAdminPage.tsx";
 import ProductUserPage from "./pages/ProductUserPage.tsx";
 import Home from "./pages/Home.tsx";
+import BuddhistFuneral from "./pages/BuddhistFuneral.tsx";
+
+
 
 const role = readRoles() || "ROLE_USER";
 const basePagePath = role === "ROLE_ADMIN" ? "/page/admin" : "/page";
@@ -72,22 +75,12 @@ const userRoutes = [
     path: `${basePagePath}/product`,
     element: <ProductUserPage />,
   },
-   {
-    path: `${basePagePath}/cremation-coffin`,
-    element: <h1> Đặt quan tài hỏa táng ở đây</h1>,
-  },
-  {
-    path: `${basePagePath}/burial-coffin`,
-    element: <h1> Đặt Quan Tài Đại Táng ở đây</h1>,
-  },
-  {
-    path: `${basePagePath}/urn`,
-    element: <h1> Đặt Hu Đề Cốt ở đây</h1>,
-  },
+
   {
     path: `${basePagePath}/buddhist-funeral`,
-    element: <h1> Đặt Tang Lễ Phật Giáo ở đây</h1>,
+    element: <BuddhistFuneral />,
   },
+  
   {
     path: `${basePagePath}/catholic-funeral`,
     element: <h1> Đặt Tang Lễ Công Giáo ở đây</h1>,
