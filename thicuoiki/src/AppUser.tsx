@@ -43,7 +43,9 @@ const AppUser = () => {
         <Layout>
             <Header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#fff", padding: "0 20px", height: "80px", borderBottom: "1px solid #ddd" }}>
     <div style={{ fontSize: "20px", fontWeight: "bold", marginTop: "10px" }}>
-        <img src="https://traihomthienduc.com/upload/giaodien/logo.png" alt="Logo" style={{ height: "70px" }} />
+        <Link to="/page/home">
+            <img src="https://traihomthienduc.com/upload/giaodien/logo.png" alt="Logo" style={{ height: "70px", cursor: "pointer" }} />
+        </Link>
     </div>
     <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
         <Button type="primary" icon={<ShoppingCartOutlined />} onClick={() => toggleModal(1, true)} />
