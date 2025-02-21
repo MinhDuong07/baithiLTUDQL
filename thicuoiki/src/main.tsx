@@ -20,6 +20,7 @@ import ProductUserPage from "./pages/ProductUserPage.tsx";
 import Home from "./pages/Home.tsx";
 import BuddhistFuneral from "./pages/BuddhistFuneral.tsx";
 import CatholicFuneral from "./pages/CatholicFuneral.tsx";
+import CoffinProduction from "./pages/CoffinProduction.tsx";
 
 
 
@@ -90,7 +91,7 @@ const userRoutes = [
   
   {
     path: `${basePagePath}/coffin-production`,
-    element: <h1> Đặt Quy Trình Sản Xuất Quan Tài ở đây</h1>,
+    element: <CoffinProduction />,
   },
   
 ];
