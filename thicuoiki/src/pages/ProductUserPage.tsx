@@ -17,11 +17,50 @@ const ProductUserPage = () => {
     const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedPriceRange, setSelectedPriceRange] = useState<string | null>(null);
+
 
     useEffect(() => {
         fetchProduct().then((data) => setProducts(data));
         fetchCategories().then((data) => setCategories(data));
     }, []);
+
+    useEffect(() => {
+        let filtered = products;
+    
+        if (searchTerm.trim() !== "") {
+            filtered = filtered.filter((product) =>
+                product.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+    
+        if (selectedCategory) {
+            filtered = filtered.filter((product) => product.category.id === selectedCategory);
+        }
+    
+        if (selectedPriceRange) {
+            filtered = filtered.filter((product) => {
+                const price = product.price;
+        
+                switch (selectedPriceRange) {
+                    case "1-10":
+                        return price >= 1_000_000 && price <= 10_000_000;
+                    case "11-50":
+                        return price >= 11_000_000 && price <= 50_000_000;
+                    case "51-100":
+                        return price >= 51_000_000 && price <= 100_000_000;
+                    case "over-100":
+                        return price > 100_000_000;
+                    default:
+                        return true;
+                }
+            });
+        }
+        
+    
+        setFilteredProducts(filtered);
+    }, [searchTerm, selectedCategory, selectedPriceRange, products]);
+    
 
     useEffect(() => {
         let filtered = products;
@@ -44,15 +83,15 @@ const ProductUserPage = () => {
             setSelectedQuantities((prev) => ({ ...prev, [productId]: quantity }));
         }
     };
-
+// sửa ở đây r
     const handleAddToCart = async (productId: number) => {
         const quantity = selectedQuantities[productId] || 1;
         try {
             const response = await addToCart({ productId, quantity });
-            if (response) {
-                message.success("Sản phẩm đã được thêm vào giỏ hàng!");
+            if (response?.status) {
+                message.success(response.message);
             } else {
-                message.error("Thêm sản phẩm vào giỏ hàng thất bại.");
+                message.error(response?.message);
             }
         } catch (error) {
             message.error("Có lỗi xảy ra khi thêm vào giỏ hàng.");
@@ -86,6 +125,17 @@ const ProductUserPage = () => {
                             {category.name}
                         </Option>
                     ))}
+                </Select>
+                <Select
+                    style={{ width: 220 }}
+                    placeholder="Khoảng giá"
+                    allowClear
+                    onChange={(value) => setSelectedPriceRange(value || null)}
+                    >
+                    <Option value="1-10">1 - 10 triệu</Option>
+                    <Option value="11-50">11 - 50 triệu</Option>
+                    <Option value="51-100">51 - 100 triệu</Option>
+                    <Option value="over-100">Trên 100 triệu</Option>
                 </Select>
             </div>
 
@@ -145,16 +195,19 @@ const ProductUserPage = () => {
     footer={null}
 >
     {selectedProduct && (
-        <div style={{ textAlign: "center" }}>
-            <Image src={selectedProduct.image} alt={selectedProduct.name} width={200} />
-            <Title level={4}>{selectedProduct.name}</Title>
-            <Text strong style={{ color: "red", fontSize: 18 }}>
-                {selectedProduct.price.toLocaleString()}đ
-            </Text>
-            <p><strong>Loại gỗ:</strong> {selectedProduct.woodType}</p>
-            <p><strong>Kích thước:</strong> {selectedProduct.size}</p>
-            <p><strong>Mô tả:</strong> {selectedProduct.description}</p>
-        </div>
+        <Row gutter={[16, 16]}>
+            <Col span={12} style={{ textAlign: "center" }}>
+                <Image src={selectedProduct.image} alt={selectedProduct.name} width={200} />
+            </Col>
+            <Col span={12}>
+                <Title level={4}>{selectedProduct.name}</Title>
+                <Text strong style={{ color: "red", fontSize: 18 }}>{selectedProduct.price.toLocaleString()}đ</Text>
+                <p><strong>Chất liệu:</strong> {selectedProduct.woodType}</p>
+                <p><strong>Kích thước:</strong> {selectedProduct.size}</p>
+                <p><strong>Mô tả:</strong> {selectedProduct.description}</p>
+                <p><strong>Số lượng:</strong> {selectedProduct.quantity}</p>
+            </Col>
+        </Row>
     )}
 </Modal>
         </div>

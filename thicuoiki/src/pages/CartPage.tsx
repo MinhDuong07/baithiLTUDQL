@@ -80,15 +80,15 @@ const CartPage: React.FC<{ isModalOpenCart: boolean }> = ({ isModalOpenCart }) =
     };
 
     try {
-      const order = await createOrder(orderRequest);
-      if (order) {
-        message.success("Đặt hàng thành công!");
+      const data = await createOrder(orderRequest);
+      if (data?.order) {
+        message.success(data.message);
         await clearCart();
         setCartItems([]);
         setTotalCartPrice(0);
         setIsModalOpen(false);
       } else {
-        message.error("Đặt hàng thất bại.");
+        message.error(data?.message);
       }
     } catch {
       message.error("Lỗi khi đặt hàng.");
@@ -111,18 +111,20 @@ const CartPage: React.FC<{ isModalOpenCart: boolean }> = ({ isModalOpenCart }) =
 
   const handleQuantityChange = async (value: number | null, record: CartItem) => {
     if (value && value > 0) {
-      await updateCartItemQuantity({ productId: record.product.id, quantity: value });
+      const response = await updateCartItemQuantity({ productId: record.product.id, quantity: value });
+      message.success(response?.message)
       loadCart();
     }
   };
 
   const handleRemoveItem = async (productId: number) => {
-    await removeFromCart(productId);
+    const response = await removeFromCart(productId);
+    message.success(response?.message)
     loadCart();
   };
 
   const columns = [
-    { title: "Id sản phẩm", dataIndex: ["product", "id"], key: "id" },
+    { title: "Mã sản phẩm", dataIndex: ["product", "id"], key: "id", align: "right", width: 100, onHeaderCell: () => ({ style: { textAlign: "left" } }) },
     { 
       title: "Hình ảnh", 
       dataIndex: ["product", "image"], 
@@ -130,7 +132,13 @@ const CartPage: React.FC<{ isModalOpenCart: boolean }> = ({ isModalOpenCart }) =
       render: (image: string) => <img src={image} alt="Product" style={{ width: 50, height: 50 }} />
     },
     { title: "Tên sản phẩm", dataIndex: ["product", "name"], key: "name" },
-    { title: "Giá", dataIndex: "totalPrice", key: "price" },
+    {
+      title: "Giá",
+      dataIndex: "totalPrice",
+      key: "price",
+      render: (value: any) => value.toLocaleString('vi-VN') + " đ"
+    },
+    
     {
       title: "Số lượng",
       dataIndex: "quantity",
@@ -144,9 +152,9 @@ const CartPage: React.FC<{ isModalOpenCart: boolean }> = ({ isModalOpenCart }) =
       ),
     },
     {
-      title: "Hành động",
+      title: "Thao tác",
       key: "actions",
-      render: (_, record: CartItem) => (
+      render: ( record: CartItem) => (
         <Space>
           <Button onClick={() => handleRemoveItem(record.product.id)} danger>Xóa</Button>
         </Space>
@@ -161,6 +169,7 @@ const CartPage: React.FC<{ isModalOpenCart: boolean }> = ({ isModalOpenCart }) =
         columns={columns} 
         rowKey="id" 
         scroll={{ x: "max-content" }} 
+        pagination={{pageSize: 5}}
       />
       <div style={{ marginTop: 16, fontSize: 18 }}>
         <strong>Tổng tiền: {totalCartPrice.toLocaleString()} VND</strong>
@@ -175,34 +184,86 @@ const CartPage: React.FC<{ isModalOpenCart: boolean }> = ({ isModalOpenCart }) =
       </Button>
 
       <Modal
-        title="Thông tin đặt hàng"
+        title="🛒 Thông tin đặt hàng"
         open={isModalOpen}
         onOk={handleModalOk}
-        onCancel={handleModalCancel}
+        okText="Lưu"
+        cancelButtonProps={{ style: { display: "none" } }}
+        onCancel={() => setIsModalOpen(false)} // ✅ BẮT BUỘC để dấu X hoạt động!
         confirmLoading={loading}
+        centered
+        width={600}
       >
-        <Form layout="vertical">
-          <Form.Item label="Họ và tên">
-            <Input name="fullName" value={customerInfo.fullName} onChange={handleInputChange} />
-          </Form.Item>
-          <Form.Item label="Địa chỉ">
-            <Input name="address" value={customerInfo.address} onChange={handleInputChange} />
-          </Form.Item>
-          <Form.Item label="Số điện thoại">
-            <Input name="phone" value={customerInfo.phone} onChange={handleInputChange} />
-          </Form.Item>
-          <Form.Item label="Phương thức thanh toán">
-            <Select value={customerInfo.paymentMethod} onChange={handlePaymentMethodChange}>
-              <Option value="COD">Thanh toán khi nhận hàng (COD)</Option>
-              <Option value="BankTransfer">Chuyển khoản ngân hàng</Option>
-              <Option value="EWallet">Ví điện tử (Momo, ZaloPay...)</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item label="Ghi chú (nếu có)">
-            <Input.TextArea name="notes" value={customerInfo.notes} onChange={handleInputChange} />
-          </Form.Item>
-        </Form>
-      </Modal>
+
+  <Form layout="vertical">
+    <Form.Item
+      label={<strong>Họ và tên</strong>}
+      name="fullName"
+      rules={[{ required: true, message: "Vui lòng nhập họ và tên!" }]}
+    >
+      <Input
+        placeholder="Nhập họ và tên"
+        name="fullName"
+        value={customerInfo.fullName}
+        onChange={handleInputChange}
+      />
+    </Form.Item>
+
+    <Form.Item
+      label={<strong>Địa chỉ</strong>}
+      name="address"
+      rules={[{ required: true, message: "Vui lòng nhập địa chỉ!" }]}
+    >
+      <Input
+        placeholder="Nhập địa chỉ nhận hàng"
+        name="address"
+        value={customerInfo.address}
+        onChange={handleInputChange}
+      />
+    </Form.Item>
+
+    <Form.Item
+      label={<strong>Số điện thoại</strong>}
+      name="phone"
+      rules={[
+        { required: true, message: "Vui lòng nhập số điện thoại!" },
+        { pattern: /^[0-9]{10}$/, message: "Số điện thoại không hợp lệ!" },
+      ]}
+    >
+      <Input
+        placeholder="VD: 0901234567"
+        name="phone"
+        value={customerInfo.phone}
+        onChange={handleInputChange}
+      />
+    </Form.Item>
+
+    <Form.Item
+      label={<strong>Phương thức thanh toán</strong>}
+      name="paymentMethod"
+      rules={[{ required: true, message: "Vui lòng chọn phương thức thanh toán!" }]}
+    >
+      <Select
+        placeholder="Chọn phương thức"
+        value={customerInfo.paymentMethod}
+        onChange={handlePaymentMethodChange}
+      >
+        <Option value="COD">Thanh toán khi nhận hàng (COD)</Option>
+      </Select>
+    </Form.Item>
+
+    <Form.Item label={<strong>Ghi chú (nếu có)</strong>} name="notes">
+      <Input.TextArea
+        rows={3}
+        placeholder="Nhập ghi chú cho đơn hàng (nếu có)"
+        name="notes"
+        value={customerInfo.notes}
+        onChange={handleInputChange}
+      />
+    </Form.Item>
+  </Form>
+</Modal>
+
     </div>
   );
 };

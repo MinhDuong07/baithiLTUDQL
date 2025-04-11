@@ -29,14 +29,41 @@ const UserOrderPage: React.FC = () => {
   };
 
   const columns = [
-    { title: "ID", dataIndex: "id", key: "id" },
-    { title: "Khách hàng", dataIndex: "customerName", key: "customerName" },
-    { title: "Tổng tiền", dataIndex: "totalPrice", key: "totalPrice" },
-    { title: "Trạng thái", dataIndex: "status", key: "status" },
+    { title: "Mã đơn hàng", dataIndex: "id", key: "id", align: "right", onHeaderCell: () => ({ style: { textAlign: "left" } }), },
     {
-      title: "Hành động",
+      title: "Hình ảnh",
+      key: "productImage",
+      render: (_: any, record: Order) => {
+        const firstImage = record.orderDetails?.[0]?.product?.image;
+        return (
+          <img
+            src={firstImage || "/default-product.png"}
+            alt="Ảnh sản phẩm"
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 8,
+              objectFit: "cover",
+              boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+            }}
+          />
+        );
+      },
+    },
+    { title: "Khách hàng", dataIndex: "customerName", key: "customerName" },
+    {
+      title: "Tổng tiền",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
+      align: "right",
+      onHeaderCell: () => ({ style: { textAlign: "left" } }),
+      render: (value: number) => `${value.toLocaleString("vi-VN")} đ`,
+    },    
+    { title: "Trạng thái", dataIndex: "status", key: "status", },
+    {
+      title: "Thao tác",
       key: "actions",
-      render: (_, record: Order) => <Button onClick={() => handleViewOrder(record.id)}>Xem</Button>,
+      render: ( record: Order) => <Button onClick={() => handleViewOrder(record.id)}>Xem</Button>,
     },
   ];
 
@@ -50,11 +77,41 @@ const UserOrderPage: React.FC = () => {
             <p><b>Địa chỉ:</b> {selectedOrder.shippingAddress}</p>
             <p><b>Tổng tiền:</b> {selectedOrder.totalPrice} VND</p>
             <h4>Chi tiết sản phẩm:</h4>
-            <ul>
+            <div>
               {selectedOrder.orderDetails.map((item) => (
-                <li key={item.id}>{item.product.id}: {item.product.name} - {item.quantity} x {item.product.price} VND = {item.totalPrice}</li>
+                <div
+                  key={item.id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: 12,
+                    gap: 12,
+                    borderBottom: "1px solid #f0f0f0",
+                    paddingBottom: 8,
+                  }}
+                >
+                  <img
+                    src={item.product.image || "/default-product.png"}
+                    alt={item.product.name}
+                    style={{
+                      width: 60,
+                      height: 60,
+                      objectFit: "cover",
+                      borderRadius: 8,
+                      boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+                    }}
+                  />
+                  <div>
+                    <p style={{ margin: 0 }}><b>{item.product.name}</b></p>
+                    <p style={{ margin: 0 }}>
+                      {item.quantity} x {item.product.price.toLocaleString()} VND ={" "}
+                      <b>{item.totalPrice.toLocaleString()} VND</b>
+                    </p>
+                  </div>
+                </div>
               ))}
-            </ul>
+            </div>
+
           </div>
         )}
       </Modal>
