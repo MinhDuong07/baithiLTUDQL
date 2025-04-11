@@ -1,92 +1,131 @@
 import { Link, Outlet } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout, Menu, Button, Modal, Space, Typography } from "antd";
-import { UserOutlined, ShoppingCartOutlined, AppstoreOutlined, HomeOutlined } from "@ant-design/icons";
+import { UserOutlined, ShoppingCartOutlined, AppstoreOutlined, HomeOutlined, UnorderedListOutlined, ShopOutlined, DropboxOutlined, SolutionOutlined } from "@ant-design/icons";
 import { readRoles } from "./utils/localstorage";
+import { getCurrentUser } from "./api/auth.api";
 import UserProfile from "./pages/UserProfile";
-import CartPage from "./pages/CartPage";
 
 const { Header, Sider, Content } = Layout;
-const { Title } = Typography;
 
-// Lấy quyền người dùng
 const role = readRoles() || "ROLE_USER";
 const menuItems = [
-  { key: "item01", label: "Sản phẩm", icon: <AppstoreOutlined />, href: "/page/admin/product", roles: ["ROLE_ADMIN"] },
-  { key: "item02", label: "Khách hàng", icon: <UserOutlined />, href: "/page/admin/customer", roles: ["ROLE_ADMIN"] },
-  { key: "item03", label: "Danh mục", icon: <ShoppingCartOutlined />, href: "/page/admin/category", roles: ["ROLE_ADMIN"] },
-  { key: "item04", label: "Nhà cung cấp", icon: <ShoppingCartOutlined />, href: "/page/admin/supplier", roles: ["ROLE_ADMIN"] },
-  { key: "item05", label: "Kho hàng", icon: <ShoppingCartOutlined />, href: "/page/admin/stockentry", roles: ["ROLE_ADMIN"] },
-  { key: "item07", label: "Đơn hàng", icon: <AppstoreOutlined />, href: "/page/admin/order", roles: ["ROLE_ADMIN"] },
-  { key: "item08", label: "Home", icon: <HomeOutlined />, href: "/page/admin/homeadmin", roles: ["ROLE_ADMIN"] },
+  {
+    key: "item08",
+    label: "Bảng điều khiển",
+    icon: <HomeOutlined />,
+    href: "/page/admin/homeadmin",
+    roles: ["ROLE_ADMIN"]
+  },
+  {
+    key: "item01",
+    label: "Sản phẩm",
+    icon: <AppstoreOutlined />, // Có thể thay bằng <DropboxOutlined /> nếu muốn icon thùng hàng
+    href: "/page/admin/product",
+    roles: ["ROLE_ADMIN"]
+  },
+  {
+    key: "item02",
+    label: "Danh mục",
+    icon: <UnorderedListOutlined />,
+    href: "/page/admin/category",
+    roles: ["ROLE_ADMIN"]
+  },
+  {
+    key: "item03",
+    label: "Đơn hàng",
+    icon: <SolutionOutlined />,
+    href: "/page/admin/order",
+    roles: ["ROLE_ADMIN"]
+  },
+  {
+    key: "item04",
+    label: "Nhập hàng",
+    icon: <DropboxOutlined />,
+    href: "/page/admin/stockentry",
+    roles: ["ROLE_ADMIN"]
+  },
+  {
+    key: "item05",
+    label: "Khách hàng",
+    icon: <UserOutlined />,
+    href: "/page/admin/customer",
+    roles: ["ROLE_ADMIN"]
+  },
+  {
+    key: "item06",
+    label: "Nhà cung cấp",
+    icon: <ShopOutlined />,
+    href: "/page/admin/supplier",
+    roles: ["ROLE_ADMIN"]
+  },
+  
 ];
 
-// Lọc menu theo quyền user
 const filteredMenuItems = menuItems.filter(item => (item.roles ?? []).includes(role));
 
-// Thiết lập CSS
-const layoutStyle = { width: "100vw", height: "100vh" };
-const headerStyle = { textAlign: "right", color: "#fff", height: 64, paddingInline: 48, lineHeight: "64px", backgroundColor: "#4096ff" };
-const siderStyle = { backgroundColor: "#001529", color: "#fff", paddingTop: 20 };
-const contentStyle = { minHeight: "100vh", padding: "24px", background: "#f0f2f5", display: "flex", justifyContent: "center", alignItems: "center" };
+const App = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
 
-function App() {
-  const [isModalOpen, setIsModalOpen] = useState([false, false]);
-
-  const toggleModal = (idx: number, target: boolean) => {
-    setIsModalOpen((prev) => {
-      const newState = [...prev];
-      newState[idx] = target;
-      return newState;
-    });
-  };
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const userData = await getCurrentUser();
+        setUser(userData);
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin user:", error);
+      }
+    }
+    fetchUserData();
+  }, []);
 
   return (
-    <>
-      <Layout style={layoutStyle}>
-        {/* HEADER */}
-        <Header style={headerStyle}>
-          <Space>
-            <Button type="primary" icon={<ShoppingCartOutlined />} onClick={() => toggleModal(1, true)} />
-            <Button type="primary" onClick={() => toggleModal(0, true)}>
-              <UserOutlined />
-            </Button>
-          </Space>
-        </Header>
+    <Layout style={{ width: "100vw", height: "100vh", backgroundColor: "#F5F5F5" }}>
+      <Header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0 24px", backgroundColor: "#FFFFFF", boxShadow: "0px 2px 5px rgba(0,0,0,0.1)" }}>
+      <a href="/page/admin/homeadmin" target="_blank" rel="noopener noreferrer">
+        <img
+          src="https://traihomthienduc.com/upload/giaodien/logo.png"
+          alt="Logo"
+          style={{ height: 60, marginBottom: -20, marginLeft: 20 }} // 👈 Dịch sang phải 16px
+        />
+      </a>
+      <Space size="small" align="center" style={{ width: 'auto', justifyContent: 'flex-start' }}>
+        <Button type="primary" icon={<UserOutlined />} onClick={() => setIsModalOpen(true)} />
+        <span style={{ fontWeight: "bold", marginLeft: 1 }}>
+          {user?.username || "Tài khoản"}
+        </span>
+      </Space>
+      </Header>
 
-        <Layout>
-          {/* SIDEBAR */}
-          <Sider width="20%" style={siderStyle}>
-            <Title level={4} style={{ color: "white", textAlign: "center", marginBottom: 20 }}>
-              Admin Panel
-            </Title>
-            <Menu theme="dark" defaultSelectedKeys={["item01"]} mode="inline">
-              {filteredMenuItems.map((item) => (
-                <Menu.Item key={item.key} icon={item.icon}>
-                  <Link to={item.href}>{item.label}</Link>
-                </Menu.Item>
-              ))}
-            </Menu>
-          </Sider>
+      <Layout>
+        <Sider style={{ backgroundColor: "#FFFFFF", paddingTop: 20, borderRight: "1px solid #E0E0E0", width: "250px" }}>
+          <Menu theme="light" defaultSelectedKeys={["item08"]} mode="inline">
+            {filteredMenuItems.map(item => (
+              <Menu.Item key={item.key} icon={item.icon} style={{ color: "#1E88E5" }}>
+                <Link to={item.href} style={{ color: "inherit" }}>{item.label}</Link>
+              </Menu.Item>
+            ))}
+          </Menu>
+        </Sider>
 
-          {/* CONTENT */}
-          <Content style={contentStyle}>
-            <Outlet />
-          </Content>
-        </Layout>
+        <Content style={{ padding: 24, backgroundColor: "#FAFAFA", minHeight: "calc(100vh - 70px)", width: "calc(100% - 250px)" }}>
+          <Outlet />
+        </Content>
       </Layout>
 
-      {/* MODAL PROFILE */}
-      <Modal title="Thông tin tài khoản" open={isModalOpen[0]} onOk={() => toggleModal(0, false)} onCancel={() => toggleModal(0, false)} width={800}>
+      <Modal
+        title="Thông tin tài khoản"
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        footer={null} // Ẩn OK và Cancel
+        width={800}
+      >
         <UserProfile />
       </Modal>
 
-      {/* MODAL CART */}
-      <Modal title="Giỏ hàng của bạn" open={isModalOpen[1]} onOk={() => toggleModal(1, false)} onCancel={() => toggleModal(1, false)}>
-      <CartPage isModalOpenCart={isModalOpen[1]}  />
-      </Modal>
-    </>
+    </Layout>
   );
-}
+};
 
 export default App;
